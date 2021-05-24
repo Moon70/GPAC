@@ -1,0 +1,14 @@
+package lunartools.colorquantizer;
+
+public enum DitheringAlgorithm {
+	NO_DITHERING,
+	SIMPLE_DITHERING1,
+	FLOYD_STEINBERG,
+	JARVIS_JUDICE_NINKE,
+	STUCKI,
+	ATKINSON,
+	BURKES,
+	SIERRA,
+	TWO_ROW_SIERRA,
+	SIERRA_LITE
+}

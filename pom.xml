@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>lunartools</groupId>
 	<artifactId>gpac</artifactId>
-	<version>1.0.0</version>
+	<version>1.2-SNAPSHOT</version>
 	<name>Gif Piece A Change</name>
 	<description>A color quantizer</description>
 	<properties>
@@ -11,25 +11,20 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
 	<build>
-		<resources>
-			<resource>
-				<filtering>true</filtering>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>project.properties</include>
-					<include>About_Ganimed.html</include>
-				</includes>
-			</resource>
-			<resource>
-				<filtering>false</filtering>
-				<directory>src/main/resources</directory>
-				<excludes>
-					<exclude>project.properties</exclude>
-					<exclude>About_Ganimed.html</exclude>
-				</excludes>
-			</resource>
-		</resources>
    		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+							</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<executions>
@@ -55,4 +50,25 @@
 			</plugin>
 		</plugins>
 	</build>
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>1.7.30</version>
+		</dependency>
+		<!-- https://github.com/Moon70/LunarTools/packages -->
+		<dependency>
+			<groupId>lunartools</groupId>
+			<artifactId>lunartools</artifactId>
+ 			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Moon70 Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/Moon70/GPAC</url>
+		</repository>
+	</distributionManagement>
 </project>

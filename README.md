@@ -1,4 +1,4 @@
-GPAC - a color quantizer (color reduction algorithm)
+GPAC - a colour quantizer
 ==
 **GPAC** stands for 'Gif Piece A Change'.
 
@@ -6,16 +6,52 @@ The name came up while listening to the album 'Shaved Fish' by John Lennon.
 
 
 
-I needed a color quantizer for the [Ganimed](https://github.com/Moon70/Ganimed) tool, because i wasn´t satisfied with Java´s GIF image quality.
+I needed a colour quantizer for the [Ganimed](https://github.com/Moon70/Ganimed) tool, because i wasn´t satisfied with Java´s GIF image quality.
 
-This project is intended to become a playground to fiddle around with own ideas to further improve image quality.
+GIF is a lossless graphics file format but limited to 256 colours. Therefore, when converting a 24-bit-truecolour image to GIF, a colour-reduction has to be applied to the image first, so that it uses at most 256 colours.
 
-The primary goal is to have fun doing so, instead of just implementing the best and most complex algorithm found on the internet :-)  I´ll create a WIKI for that, it´s somewhere on my todo list.
+Java does this out-of-the-box, so converting an image to GIF looks very simple:
+
+```java
+BufferedImage image=ImageIO.read(new File("the-image-file-to-load"));
+ImageIO.write(image,"GIF",new File("the-GIF-file-to-save"));
+```
+
+However, depending on the source image, the image quality of the resulting GIF file can be anything from 'good' to 'ugly'.
 
 
 
-This version comes with a simple commandline interface:
+This is where GPAC jumps in:
 
-`java -jar gpac-1.0.0.jar whatever.png`
+```java
+BufferedImage image=ImageIO.read(new File("the-image-file-to-load"));
+new GPAC().quantizeColours(image,256);
+ImageIO.write(image, "GIF", new File("the-GIF-file-to-save"));
+```
+The BufferedImage is converted to use at most 256 colours.
 
-This creates `whatever.gif` in the samer folder.
+
+
+```java
+BufferedImage image=ImageIO.read(new File("the-image-file-to-load"));
+new GPAC()
+    .setDitheringAlgorithm(DitheringAlgorithms.FLOYD_STEINBERG)
+    .quantizeColours(image,256);
+ImageIO.write(image, "GIF", new File("the-GIF-file-to-save"));
+```
+This example also applies a dithering algorithm to the image.
+
+Algorithms available:
+
+- Floyd-Steinberg
+- Jarvis, Judice and Ninke
+- Stucki
+- Atkinson
+- Burkes
+- Sierra
+- Two-Row-Sierra
+- Sierra Lite
+
+
+
+For further information, please visit the [GPAC Wiki](https://github.com/Moon70/GPAC/wiki).
