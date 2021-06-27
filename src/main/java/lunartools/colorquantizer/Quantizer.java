@@ -117,13 +117,16 @@ public class Quantizer {
 
 	private void splitCubesToPaletteSize(int paletteSize) {
 		while(cubes.size()<paletteSize) {
-			int maxCols=0;
+			int maxCols=2;
 			ICube cubeSplit=null;
 			for(int i=0;i<cubes.size();i++) {
 				if(cubes.get(i)!=null && cubes.get(i).getColours().size()>maxCols) {
 					cubeSplit=cubes.get(i);
 					maxCols=cubeSplit.getColours().size();
 				}
+			}
+			if(cubeSplit==null) {
+				return;
 			}
 			ICube cube1=cubeSplit.getChildCubeHi();
 			ICube cube2=cubeSplit.getChildCubeLo();
@@ -136,7 +139,11 @@ public class Quantizer {
 	private Palette calcPalette(ArrayList<ICube> cubes) {
 		Palette colorsPalette=new Palette();
 		for(int i=0;i<cubes.size();i++) {
-			colorsPalette.addColour(new ColourRGBG(cubes.get(i).getAveragePixel()));
+			ICube cube=cubes.get(i);
+			//TODO: fix so that check >0 can be removed
+			if(cube.getNumberOfColours()>0) {
+				colorsPalette.addColour(new ColourRGBG(cube.getAveragePixel()));
+			}
 		}
 		return colorsPalette;
 	}

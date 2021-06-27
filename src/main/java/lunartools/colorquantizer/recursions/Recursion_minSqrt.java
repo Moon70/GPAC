@@ -27,10 +27,10 @@ public class Recursion_minSqrt implements IRecursion{
 		ICube cubeHi=cube.getChildCubeHi();
 		ICube cubeLo=cube.getChildCubeLo();
 		if(level==1) {
-			if(cubeHi!=null) {
+			if(cubeHi!=null && cubeHi.getNumberOfColours()>0) {
 				cubes.add(cubeHi);
 			}
-			if(cubeLo!=null) {
+			if(cubeLo!=null && cubeLo.getNumberOfColours()>0) {
 				cubes.add(cubeLo);
 			}
 		}else {
