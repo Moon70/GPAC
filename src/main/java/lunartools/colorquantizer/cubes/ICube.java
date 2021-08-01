@@ -18,4 +18,8 @@ public interface ICube {
 
 	public ICube getChildCubeLo();
 
+	public int getScore();
+
+	public boolean isFinal();
+
 }

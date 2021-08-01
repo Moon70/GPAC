@@ -91,16 +91,18 @@ public class Quantizer {
 	}
 
 	private Palette quantizeColors(int[] pixelcount,int width,int height,int paletteSize) {
-		logger.debug("quantizing pixeldata "+width+"x"+height+" to: "+paletteSize);
+		logger.debug("analyzing pixeldata "+width+"x"+height+"...");
 		ICube cube=createFirstCubeFromPixelCountArray(pixelcount);
 		if(cube.getColours().size()<=paletteSize) {
+			logger.trace("number of colours: "+cube.getNumberOfColours()+", no quantizing necessary");
 			return null;
 		}
-		logger.trace("number of colours: "+cube.getNumberOfColours());
+		logger.trace("number of colours: "+cube.getNumberOfColours()+", quantizing to: "+paletteSize);
 		IRecursion recursion=getRecursionInstance();
 		this.cubes=recursion.doRecursion(cube, paletteSize>>1);
 		logger.trace("number of cubes after recursion: "+cubes.size());
 		splitCubesToPaletteSize(paletteSize);
+		logger.trace("number of cubes after quantizing: "+cubes.size());
 		return calcPalette(cubes);
 	}
 
@@ -117,22 +119,25 @@ public class Quantizer {
 
 	private void splitCubesToPaletteSize(int paletteSize) {
 		while(cubes.size()<paletteSize) {
-			int maxCols=2;
+			int maxScore=0;
 			ICube cubeSplit=null;
 			for(int i=0;i<cubes.size();i++) {
-				if(cubes.get(i)!=null && cubes.get(i).getColours().size()>maxCols) {
-					cubeSplit=cubes.get(i);
-					maxCols=cubeSplit.getColours().size();
+				ICube cube=cubes.get(i);
+				if(cube!=null && !cube.isFinal() && cube.getScore()>maxScore) {
+					cubeSplit=cube;
+					maxScore=cube.getScore();
 				}
 			}
 			if(cubeSplit==null) {
 				return;
 			}
-			ICube cube1=cubeSplit.getChildCubeHi();
-			ICube cube2=cubeSplit.getChildCubeLo();
-			cubes.remove(cubeSplit);
-			cubes.add(cube1);
-			cubes.add(cube2);
+			ICube cubeHi=cubeSplit.getChildCubeHi();
+			ICube cubeLo=cubeSplit.getChildCubeLo();
+			if(!cubeSplit.isFinal()) {
+				cubes.remove(cubeSplit);
+				cubes.add(cubeHi);
+				cubes.add(cubeLo);
+			}
 		}
 	}
 
@@ -140,10 +145,7 @@ public class Quantizer {
 		Palette colorsPalette=new Palette();
 		for(int i=0;i<cubes.size();i++) {
 			ICube cube=cubes.get(i);
-			//TODO: fix so that check >0 can be removed
-			if(cube.getNumberOfColours()>0) {
-				colorsPalette.addColour(new ColourRGBG(cube.getAveragePixel()));
-			}
+			colorsPalette.addColour(new ColourRGBG(cube.getAveragePixel()));
 		}
 		return colorsPalette;
 	}

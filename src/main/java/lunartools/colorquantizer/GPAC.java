@@ -104,7 +104,7 @@ public class GPAC {
 	 * @throws IOException
 	 */
 	public BufferedImage quantizeColours(File file,int numberOfColours) throws IOException {
-		BufferedImage bufferedImage=ImageTools.getBufferedImage_intRGB(file);
+		BufferedImage bufferedImage=ImageTools.createBufferedImage_intRGB(file);
 		quantizeColours(bufferedImage,numberOfColours);
 		return bufferedImage;
 	}

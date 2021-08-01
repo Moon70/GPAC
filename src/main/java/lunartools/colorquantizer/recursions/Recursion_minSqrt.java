@@ -20,6 +20,9 @@ public class Recursion_minSqrt implements IRecursion{
 	}
 
 	private void recursion(final ICube cube,final int level,final int mincolors) {
+		if(cube.getColours().size()==0) {
+			return;
+		}
 		if(cube.getColours().size()<=mincolors) {
 			cubes.add(cube);
 			return;

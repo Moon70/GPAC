@@ -14,7 +14,6 @@ public class Cube_splitCenter implements ICube{
 	private int minB=Integer.MAX_VALUE;
 	private int maxB=Integer.MIN_VALUE;
 
-	private int numberOfColours;
 	private long totalR;
 	private long totalG;
 	private long totalB;
@@ -22,9 +21,11 @@ public class Cube_splitCenter implements ICube{
 	private Cube_splitCenter childCubeHi;
 	private Cube_splitCenter childCubeLo;
 
+	private boolean flagFinal;
+	private int score;
+
 	@Override
 	public void addColor(ColourRGBG color) {
-		numberOfColours++;
 		colors.add(color);
 		totalR+=color.getRed();
 		totalG+=color.getGreen();
@@ -50,6 +51,7 @@ public class Cube_splitCenter implements ICube{
 		if(maxB<color.getBlue()) {
 			maxB=color.getBlue();
 		}
+		score=-1;
 	}
 
 	@Override
@@ -59,7 +61,7 @@ public class Cube_splitCenter implements ICube{
 
 	@Override
 	public int getNumberOfColours() {
-		return numberOfColours;
+		return colors.size();
 	}
 
 	@Override
@@ -111,6 +113,8 @@ public class Cube_splitCenter implements ICube{
 				splitB(lenB);
 			}
 		}
+
+		flagFinal=childCubeHi.getNumberOfColours()==0 || childCubeLo.getNumberOfColours()==0;
 	}
 
 	private void splitR(int lenR) {
@@ -148,4 +152,41 @@ public class Cube_splitCenter implements ICube{
 			}
 		}
 	}
+
+	@Override
+	public int getScore() {
+		if(score==-1) {
+			int biggestLen;
+
+			final int lenR=maxR-minR;
+			final int lenG=maxG-minG;
+			final int lenB=maxB-minB;
+
+			if(lenR>lenG) {
+				if(lenR>=lenB) {
+					biggestLen=lenR;
+				}else {
+					if(lenG>=lenB) {
+						biggestLen=lenG;
+					}else {
+						biggestLen=lenB;
+					}
+				}
+			}else {
+				if(lenG>=lenB) {
+					biggestLen=lenG;
+				}else {
+					biggestLen=lenB;
+				}
+			}
+			score=biggestLen*colors.size();
+		}
+		return score;
+	}
+
+	@Override
+	public boolean isFinal() {
+		return flagFinal;
+	}
+
 }
